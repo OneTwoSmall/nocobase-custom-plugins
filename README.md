@@ -44,10 +44,7 @@
    ```
 
 ### 💼 商业定制与支持
-如果您有以下需求，欢迎联系洽谈：
-- **定制化开发**：针对特定业务逻辑开发私有插件。
-- **系统集成**：对接企业现有 ERP、CRM 或第三方 API。
-- **技术顾问**：NocoBase 架构设计与生产环境部署优化。
+暂无.
 
 ---
 
@@ -89,10 +86,8 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    ```
 
 ### 💼 Commercial Support
-Feel free to reach out if you need:
-- **Custom Development**: Tailor-made plugins for your unique business needs.
-- **System Integration**: Connecting NocoBase with external ERP/CRM or APIs.
-- **Consulting**: Architecture design and deployment optimization for production.
+Not Now.
+
 
 ---
 
