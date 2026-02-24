@@ -17,6 +17,8 @@
 | 插件名称 | 目录名 | 说明 | 状态 |
 | :--- | :--- | :--- | :--- |
 | **增强版表格区块** | `plugins/@nocobase/plugin-enhanced-table-block` | 增强表格区块，支持合计行和圈选求和功能。 | ✅ 已发布 |
+| **Office 文件预览插件** | `plugins/@nocobase/plugin-file-previewer-office` | 支持多种办公文件预览，提供可配置的预览选项。 | ✅ 已发布 |
+| **邮件身份认证插件** | `plugins/@nocobase/plugin-auth-email` | 提供安全可靠的邮件验证码登录与注册功能。 | ✅ 已发布 |
 | **更多插件...** | - | 持续开发中，敬请期待。 | 🛠️ 计划中 |
 
 ### 🚀 快速安装
@@ -31,9 +33,9 @@
    git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
    ```
 
-3. **启用并编译**：
+3. **启用并编译**（以增强表格插件为例）：
    ```bash
-   # 启用增强表格插件
+   # 启用插件
    yarn nocobase pm enable @nocobase/plugin-enhanced-table-block
    
    # 编译项目
@@ -44,12 +46,7 @@
    ```
 
 ### 💼 商业定制与支持
-
-如果您在安装或使用过程中遇到困难，我提供以下专项技术支持：
-
-* **安装打包或远程指导**：100 元 / 次。
-* **服务承诺**：若因系统环境导致插件无法适配，**不收取任何费用**。
-* **联系邮箱**：[moonship1011@hotmail.com](mailto:moonship1011@hotmail.com)
+暂无.
 
 ---
 
@@ -64,6 +61,8 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 | Plugin Name | Directory | Description | Status |
 | :--- | :--- | :--- | :--- |
 | **Enhanced Table Block** | `plugins/@nocobase/plugin-enhanced-table-block` | Enhanced table block, supporting total rows and selection-sum functions. | ✅ Active |
+| **Office File Previewer** | `plugins/@nocobase/plugin-file-previewer-office` | Supports various office file previews with configurable options. | ✅ Active |
+| **Email Auth Plugin** | `plugins/@nocobase/plugin-auth-email` | Provides secure and reliable email verification code login/registration. | ✅ Active |
 | **More...** | - | More plugins are on the way. | 🛠️ Roadmap |
 
 ### 🚀 Quick Start
@@ -73,12 +72,12 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    cd your-nocobase-project/storage/plugins
    ```
 
-2. **Clone this repository**：
+2. **Clone this repository**:
    ```bash
    git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
    ```
 
-3. **Enable and Build**:
+3. **Enable and Build** (Example for Enhanced Table Block):
    ```bash
    # Enable the plugin
    yarn nocobase pm enable @nocobase/plugin-enhanced-table-block
@@ -91,12 +90,7 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    ```
 
 ### 💼 Commercial Support
-
-If you encounter difficulties during installation or usage, I provide the following specialized support:
-
-* **Installation Packaging / Remote Guidance**: 100 CNY / session.
-* **Service Guarantee**: No fee will be charged if the plugin cannot be adapted due to system environment issues.
-* **Contact Email**: [moonship1011@hotmail.com](mailto:moonship1011@hotmail.com)
+Not Now.
 
 ---
 
