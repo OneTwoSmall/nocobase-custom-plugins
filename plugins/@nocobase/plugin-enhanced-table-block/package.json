@@ -1,0 +1,19 @@
+{
+    "name": "@nocobase/plugin-enhanced-table-block",
+    "displayName": "Block: Enhanced Table",
+    "displayName.zh-CN": "区块：增强表格",
+    "description": "An enhanced table block with summary row and cell selection sum.",
+    "description.zh-CN": "增强表格区块，支持合计行和圈选求和功能",
+    "version": "2.1.0-beta.1",
+    "license": "AGPL-3.0",
+    "main": "./dist/server/index.js",
+    "peerDependencies": {
+        "@nocobase/client": "2.x",
+        "@nocobase/flow-engine": "2.x",
+        "@nocobase/server": "2.x",
+        "@nocobase/test": "2.x"
+    },
+    "keywords": [
+        "Blocks"
+    ]
+}
