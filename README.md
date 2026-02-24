@@ -30,7 +30,7 @@
 
 2. **克隆本仓库**：
    ```bash
-   git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
+   git clone https://github.com/OneTwoSmall/nocobase-custom-plugins.git
    ```
 
 3. **启用并编译**（以增强表格插件为例）：
@@ -74,7 +74,7 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 
 2. **Clone this repository**:
    ```bash
-   git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
+   git clone https://github.com/OneTwoSmall/nocobase-custom-plugins.git
    ```
 
 3. **Enable and Build** (Example for Enhanced Table Block):
