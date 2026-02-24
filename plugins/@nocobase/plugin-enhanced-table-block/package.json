@@ -5,6 +5,8 @@
     "description": "An enhanced table block with summary row and cell selection sum.",
     "description.zh-CN": "增强表格区块，支持合计行和圈选求和功能",
     "version": "2.1.0-beta.1",
+    "homepage": "https://github.com/OneTwoSmall/nocobase-custom-plugins/tree/main/plugins/%40nocobase/plugin-enhanced-table-block",
+    "homepage.zh-CN": "https://github.com/OneTwoSmall/nocobase-custom-plugins/blob/main/plugins/%40nocobase/plugin-enhanced-table-block/README.zh-CN.md",
     "license": "AGPL-3.0",
     "main": "./dist/server/index.js",
     "peerDependencies": {
