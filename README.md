@@ -16,7 +16,7 @@
 
 | 插件名称 | 目录名 | 说明 | 状态 |
 | :--- | :--- | :--- | :--- |
-| **增强版表格区块** | `plugins/@nocobase/plugin-enhanced-table-block` | 提供比原生表格更强大的数据过滤、自定义样式及交互功能。 | ✅ 已发布 |
+| **增强版表格区块** | `plugins/@nocobase/plugin-enhanced-table-block` | 增强表格区块，支持合计行和圈选求和功能。 | ✅ 已发布 |
 | **更多插件...** | - | 持续开发中，敬请期待。 | 🛠️ 计划中 |
 
 ### 🚀 快速安装
@@ -58,7 +58,7 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 
 | Plugin Name | Directory | Description | Status |
 | :--- | :--- | :--- | :--- |
-| **Enhanced Table Block** | `plugins/@nocobase/plugin-enhanced-table-block` | Advanced filtering, custom styling, and superior interaction compared to native tables. | ✅ Active |
+| **Enhanced Table Block** | `plugins/@nocobase/plugin-enhanced-table-block` | Enhanced table block, supporting total rows and selection-sum functions. | ✅ Active |
 | **More...** | - | More plugins are on the way. | 🛠️ Roadmap |
 
 ### 🚀 Quick Start
