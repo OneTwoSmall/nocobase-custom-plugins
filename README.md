@@ -23,14 +23,14 @@
 
 ### 🚀 快速安装
 
-1. **进入插件存放目录**：
+1. **克隆本仓库**：
    ```bash
-   cd your-nocobase-project/storage/plugins
+   git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
    ```
 
-2. **克隆本仓库**：
+2. **源码放入 nocobase 插件存放目录**：
    ```bash
-   git clone https://github.com/OneTwoSmall/nocobase-custom-plugins.git
+   cd your-nocobase-project/packages/plugins/@nocobase
    ```
 
 3. **启用并编译**（以增强表格插件为例）：
@@ -38,8 +38,11 @@
    # 启用插件
    yarn nocobase pm enable @nocobase/plugin-enhanced-table-block
    
-   # 编译项目
+   # 全量编译项目
    yarn build
+   
+   # 编译插件
+   yarn nocobase build @nocobase/plugin-enhanced-table-block
    
    # 重启服务
    yarn nocobase start
@@ -67,14 +70,14 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 
 ### 🚀 Quick Start
 
-1. **Navigate to the plugins folder**:
+1. **Clone this repository**:
    ```bash
-   cd your-nocobase-project/storage/plugins
+   git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
    ```
 
-2. **Clone this repository**:
+2. **Move source code to the NocoBase plugin directory**:
    ```bash
-   git clone https://github.com/OneTwoSmall/nocobase-custom-plugins.git
+   cd your-nocobase-project/packages/plugins/@nocobase
    ```
 
 3. **Enable and Build** (Example for Enhanced Table Block):
@@ -82,8 +85,11 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    # Enable the plugin
    yarn nocobase pm enable @nocobase/plugin-enhanced-table-block
    
-   # Build the project
+   # Build the entire project
    yarn build
+   
+   # Build the specific plugin
+   yarn nocobase build @nocobase/plugin-enhanced-table-block
    
    # Restart NocoBase
    yarn nocobase start
