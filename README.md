@@ -1,12 +1,12 @@
 # NocoBase Custom Plugins | NocoBase 自定义插件集
 
 <p align="center">
-  <a href="#-简体中文">简体中文</a> | <a href="#-english">English</a>
+  <a href="#chinese">简体中文</a> | <a href="#english">English</a>
 </p>
 
 ---
 
-<a name="-简体中文"></a>
+<div id="chinese"></div>
 
 ## 🇨🇳 简体中文
 
@@ -44,11 +44,16 @@
    ```
 
 ### 💼 商业定制与支持
-暂无.
+
+如果您在安装或使用过程中遇到困难，我提供以下专项技术支持：
+
+* **安装打包或远程指导**：100 元 / 次。
+* **服务承诺**：若因系统环境导致插件无法适配，**不收取任何费用**。
+* **联系邮箱**：[moonship1011@hotmail.com](mailto:moonship1011@hotmail.com)
 
 ---
 
-<a name="-english"></a>
+<div id="english"></div>
 
 ## 🇺🇸 English
 
@@ -68,7 +73,7 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    cd your-nocobase-project/storage/plugins
    ```
 
-2. **Clone this repository**:
+2. **Clone this repository**：
    ```bash
    git clone [https://github.com/OneTwoSmall/nocobase-custom-plugins.git](https://github.com/OneTwoSmall/nocobase-custom-plugins.git)
    ```
@@ -86,8 +91,12 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    ```
 
 ### 💼 Commercial Support
-Not Now.
 
+If you encounter difficulties during installation or usage, I provide the following specialized support:
+
+* **Installation Packaging / Remote Guidance**: 100 CNY / session.
+* **Service Guarantee**: No fee will be charged if the plugin cannot be adapted due to system environment issues.
+* **Contact Email**: [moonship1011@hotmail.com](mailto:moonship1011@hotmail.com)
 
 ---
 
