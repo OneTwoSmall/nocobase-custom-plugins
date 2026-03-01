@@ -25,17 +25,10 @@ const wrapperCss = css`
   }
 `;
 
-function getNumberFromText(text: string) {
-  if (!text) return null;
-  // match numbers even with commas or decimals, but exclude dates if possible.
-  // simplified regex for floats
-  const numStr = text.replace(/,/g, '').match(/-?\d+(\.\d+)?/);
-  return numStr ? parseFloat(numStr[0]) : null;
-}
-
 export const EnhancedTableWrapper = observer(({ model, children }: { model?: any; children: React.ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectionSum, setSelectionSum] = useState<number | null>(null);
+  const [selectionStats, setSelectionStats] = useState<{ min: number; max: number; avg: number; count: number } | null>(null);
+  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
   const api = useAPIClient();
   const [allPagesData, setAllPagesData] = useState<any[]>([]);
 
@@ -131,6 +124,42 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
     };
   }, [model, paramsStr, JSON.stringify(config), resourceDataStr, isV1]);
 
+  const orderedColumns: string[] = [];
+  const columnTitles: Record<string, string> = {};
+  const numericFields = new Set<string>();
+
+  if (isV1 && collection) {
+    if (fieldSchema?.properties) {
+      const tableSchema = Object.values(fieldSchema.properties).find((p: any) => p['x-component'] === 'TableV2') as any;
+      if (tableSchema?.properties) {
+        Object.values(tableSchema.properties).forEach((col: any) => {
+          const name = col.name || col['x-collection-field'];
+          if (name) orderedColumns.push(name);
+        });
+      }
+    }
+    collection.fields?.forEach((field: any) => {
+      columnTitles[field.name] = field.uiSchema?.title || field.title || field.name;
+      const isNumeric = ['integer', 'bigInt', 'float', 'double', 'decimal', 'number'].includes(field.type) ||
+        ['number', 'integer', 'percent', 'currency'].includes(field.interface);
+      if (isNumeric) numericFields.add(field.name);
+    });
+  } else if (!isV1 && typeof model?.mapSubModels === 'function') {
+    model.mapSubModels('columns', (column: any) => {
+      const collectionField = column?.collectionField;
+      if (collectionField) {
+        orderedColumns.push(collectionField.name);
+        columnTitles[collectionField.name] = column.props?.title || collectionField.title || collectionField.name;
+        const isNumeric = ['integer', 'bigInt', 'float', 'double', 'decimal', 'number'].includes(collectionField.type) ||
+          ['number', 'integer', 'percent', 'currency'].includes(collectionField.interface);
+        if (isNumeric) numericFields.add(collectionField.name);
+      }
+    });
+  }
+
+  const metadataRef = useRef({ numericFields, columnTitles, orderedColumns });
+  metadataRef.current = { numericFields, columnTitles, orderedColumns };
+
   // Track selection state in a ref so event listeners don't need to be recreated (which broke dragging)
   const selectionState = useRef({
     isSelecting: false,
@@ -161,8 +190,26 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
       const minC = Math.min(startCell.c, endCell.c);
       const maxC = Math.max(startCell.c, endCell.c);
 
-      let sum = 0;
-      let hasNumbers = false;
+      const selectedNumbers: number[] = [];
+
+      const { numericFields, columnTitles } = metadataRef.current;
+      const domColumnToNumericKey: Record<number, boolean> = {};
+      const thead = container.querySelector('.ant-table-thead');
+      if (thead) {
+        const firstRow = thead.querySelector('tr');
+        if (firstRow) {
+          for (let i = 0; i < firstRow.children.length; i++) {
+            const thText = firstRow.children[i].textContent || '';
+            for (const field of numericFields) {
+              const title = columnTitles[field];
+              if (title && thText.includes(title)) {
+                domColumnToNumericKey[i] = true;
+                break;
+              }
+            }
+          }
+        }
+      }
 
       container
         .querySelectorAll('.enhanced-selected-cell')
@@ -177,33 +224,32 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
             const td = tr.children[c] as HTMLElement;
             if (!td) continue;
 
-            // Skip action columns, selection columns, and typically sequence columns
-            if (
-              td.classList.contains('ant-table-selection-column') ||
-              td.querySelector('button, a, input, textarea, .nb-action-link') ||
-              td.closest('.ant-table-cell-fix-left') ||
-              td.closest('.ant-table-cell-fix-right')
-            ) {
-              continue;
-            }
-
-            // Also check header to avoid Sequence columns
-            const th = tbody.parentElement?.querySelector(`thead tr th:nth-child(${c + 1})`);
-            if (th && (th.textContent?.includes('序号') || th.textContent?.includes('Index'))) {
+            if (!domColumnToNumericKey[c]) {
               continue;
             }
 
             td.classList.add('enhanced-selected-cell');
-            const num = getNumberFromText(td.textContent || '');
-            if (num !== null) {
-              sum += num;
-              hasNumbers = true;
+            const rawText = td.textContent || '';
+            // Strip out known non-numeric characters for reliable parseFloat
+            const cleanStr = rawText.replace(/[¥$€£￥,% ]/g, '').trim();
+            const num = parseFloat(cleanStr);
+            if (!isNaN(num)) {
+              selectedNumbers.push(num);
             }
           }
         }
       });
 
-      setSelectionSum(hasNumbers ? sum : null);
+      if (selectedNumbers.length > 1) {
+        const sum = selectedNumbers.reduce((a, b) => a + b, 0);
+        const max = Math.max(...selectedNumbers);
+        const min = Math.min(...selectedNumbers);
+        const avg = sum / selectedNumbers.length;
+        setSelectionStats({ min, max, avg, count: selectedNumbers.length });
+      } else {
+        setSelectionStats(null);
+        setMousePos(null);
+      }
     };
 
     const onMouseDown = (e: MouseEvent) => {
@@ -216,7 +262,8 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
         container
           .querySelectorAll('.enhanced-selected-cell')
           .forEach((el) => el.classList.remove('enhanced-selected-cell'));
-        setSelectionSum(null);
+        setSelectionStats(null);
+        setMousePos(null);
         selectionState.current.startCell = null;
         selectionState.current.endCell = null;
         return;
@@ -228,19 +275,29 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
       selectionState.current.isSelecting = true;
       selectionState.current.startCell = getCellCoords(td);
       selectionState.current.endCell = selectionState.current.startCell;
+      setMousePos({ x: e.clientX, y: e.clientY });
       updateSelection();
 
-      // Prevent text selection drag artifacts only inside the table body
-      if (target.closest('.ant-table-tbody')) {
-        e.preventDefault();
-      }
+      // Allow text selection inside the cell
+      // e.preventDefault() was here, preventing native text selection.
     };
 
-    const onMouseEnter = (e: MouseEvent) => {
+    const onMouseMove = (e: MouseEvent) => {
       if (!selectionState.current.isSelecting) return;
+      setMousePos({ x: e.clientX, y: e.clientY });
       const td = (e.target as HTMLElement).closest('td');
       if (td) {
-        selectionState.current.endCell = getCellCoords(td);
+        const coords = getCellCoords(td);
+        selectionState.current.endCell = coords;
+
+        // If moving across different cells, clear native text selection to keep UI clean
+        if (
+          selectionState.current.startCell &&
+          (selectionState.current.startCell.r !== coords.r || selectionState.current.startCell.c !== coords.c)
+        ) {
+          window.getSelection()?.removeAllRanges();
+        }
+
         updateSelection();
       }
     };
@@ -250,33 +307,21 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
     };
 
     container.addEventListener('mousedown', onMouseDown);
-    container.addEventListener('mouseover', onMouseEnter);
+    container.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
 
     return () => {
       container.removeEventListener('mousedown', onMouseDown);
-      container.removeEventListener('mouseover', onMouseEnter);
+      container.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
     // We removed selectionSum from deps so event listeners are not recreated.
   }, []);
 
-  const columnTitles: Record<string, string> = {};
-  if (isV1 && collection) {
-    Object.keys(config).forEach((name) => {
-      const field = collection.getField(name);
-      if (field) {
-        columnTitles[name] = field.uiSchema?.title || field.title || field.name || name;
-      }
-    });
-  } else if (!isV1 && typeof model?.mapSubModels === 'function') {
-    model.mapSubModels('columns', (column: any) => {
-      const collectionField = column?.collectionField;
-      if (collectionField) {
-        columnTitles[collectionField.name] = column.props?.title || collectionField.title || collectionField.name;
-      }
-    });
-  }
+  const displayedColumns = orderedColumns.filter(c => Object.keys(config).includes(c));
+  Object.keys(config).forEach(c => {
+    if (!displayedColumns.includes(c)) displayedColumns.push(c);
+  });
 
   return (
     <div className={wrapperCss} ref={containerRef}>
@@ -296,17 +341,11 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
           }}
         >
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <span style={{ color: '#000', fontWeight: 'bold' }}>合计</span>
+            <span style={{ color: '#000', fontWeight: 'bold' }}>汇总行</span>
           </div>
 
-          {selectionSum !== null && (
-            <div style={{ color: '#000' }}>
-              求和: {Number.isInteger(selectionSum) ? selectionSum : selectionSum.toFixed(2)}
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', flex: 1 }}>
-            {Object.keys(config).map((dataIndex) => {
+          <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', flex: 1, justifyContent: 'flex-end' }}>
+            {displayedColumns.map((dataIndex) => {
               const type = config[dataIndex];
               if (!type) return null;
 
@@ -347,6 +386,44 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
           </div>
         </div>
       )}
+
+      {selectionStats && mousePos && (
+        <div
+          style={{
+            position: 'fixed',
+            left: mousePos.x + 15,
+            top: mousePos.y + 15,
+            pointerEvents: 'none',
+            zIndex: 9999,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            border: '1px solid #d9d9d9',
+            borderRadius: '4px',
+            padding: '8px 12px',
+            fontSize: '13px',
+            color: '#333',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
+          <div style={{ fontWeight: 'bold', marginBottom: '4px', borderBottom: '1px solid #eee', paddingBottom: '4px' }}>
+            圈选统计 (包含 {selectionStats.count} 个单元格)
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+            <span>最大值：</span>
+            <strong>{Number.isInteger(selectionStats.max) ? selectionStats.max : selectionStats.max.toFixed(2)}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+            <span>最小值：</span>
+            <strong>{Number.isInteger(selectionStats.min) ? selectionStats.min : selectionStats.min.toFixed(2)}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+            <span>平均值：</span>
+            <strong>{Number.isInteger(selectionStats.avg) ? selectionStats.avg : selectionStats.avg.toFixed(2)}</strong>
+          </div>
+        </div>
+      )}
     </div>
   );
 });
@@ -364,7 +441,7 @@ EnhancedTableBlockModel.registerFlow({
   title: `{{t("Enhanced table settings", { ns: "@nocobase/plugin-enhanced-table-block/client", defaultValue: "增强表格设置" })}}`,
   steps: {
     summaryConfig: {
-      title: `{{t("Summary row settings", { ns: "@nocobase/plugin-enhanced-table-block/client", defaultValue: "合计行设置" })}}`,
+      title: `{{t("Summary row settings", { ns: "@nocobase/plugin-enhanced-table-block/client", defaultValue: "汇总行设置" })}}`,
       uiSchema: (ctx) => {
         const columnsToSelect: { label: string; value: string; disabled?: boolean }[] = [];
         if (typeof ctx.model.mapSubModels === 'function') {

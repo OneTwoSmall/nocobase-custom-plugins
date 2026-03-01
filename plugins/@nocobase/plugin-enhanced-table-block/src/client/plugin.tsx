@@ -73,7 +73,7 @@ export class PluginEnhancedTableBlockClient extends Plugin {
         return {
           title: t('Summary row settings', {
             ns: '@nocobase/plugin-enhanced-table-block/client',
-            defaultValue: '合计行设置',
+            defaultValue: '汇总行设置',
           }),
           schema: () => {
             const columnsToSelect: { label: string; value: string; disabled?: boolean }[] = [];
