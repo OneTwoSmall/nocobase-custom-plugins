@@ -24,12 +24,21 @@ export interface PreviewerModalProps {
 }
 
 const saveAs = (url: string, filename: string) => {
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  fetch(url)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename || 'download';
+      document.body.appendChild(link);
+      link.click();
+      URL.revokeObjectURL(blobUrl);
+      link.remove();
+    })
+    .catch((err) => {
+      console.error('Download failed:', err);
+    });
 };
 
 export const PreviewerModal: React.FC<PreviewerModalProps> = ({
@@ -60,7 +69,11 @@ export const PreviewerModal: React.FC<PreviewerModalProps> = ({
       e.preventDefault();
       e.stopPropagation();
       if (!file) return;
-      saveAs(file.url, `${file.title}${file.extname}`);
+      let filename = file.title || file.name || 'download';
+      if (file.extname && !filename.toLowerCase().endsWith(file.extname.toLowerCase())) {
+        filename = `${filename}${file.extname}`;
+      }
+      saveAs(file.url, filename);
     },
     [file],
   );
