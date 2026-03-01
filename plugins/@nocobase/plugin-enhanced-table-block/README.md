@@ -35,6 +35,10 @@ yarn nocobase plugin install @nocobase/plugin-enhanced-table-block
 - **Enhancement:** Hover stats for cell selection is now confined to >1 cell selections, reducing UI noise on simple table clicks.
 - **Enhancement:** Multi-cell select stats popup now aggregates comprehensive info including `Max`, `Min`, `Average`, and selected counts rather than just a simplistic total sum.
 - **Style Fix:** Renamed occurrences of "Summary Row", and enforced strictly right-aligned data content inside the bottom bar.
+- **Fix:** Fully internationalized all remaining UI text (Summary row, Selection stats, aggregation type labels, settings dialogs) to correctly switch between English and Chinese based on the system language.
+- **Fix:** Resolved an i18next pluralization conflict caused by using the reserved keyword `count` as an interpolation variable; replaced with `num`.
+- **Fix:** Explicitly registered locale resources via `i18n.addResources()` in the plugin's `load()` method to ensure translations are available immediately at runtime.
+- **Cleanup:** Removed hardcoded Chinese `defaultValue` fallbacks from all `t()` calls, relying on proper locale JSON files instead.
 
 **v2.1.0-beta**
 - **Fix:** Resolved a V1 page incompatibility resulting in 404 block requests that crippled the calculation script from retrieving all table data.

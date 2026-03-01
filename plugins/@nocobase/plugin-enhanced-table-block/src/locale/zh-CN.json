@@ -1,12 +1,16 @@
 {
     "Enhanced Table": "增强表格",
     "Enhanced table settings": "增强表格设置",
-    "Summary row settings": "合计行设置",
-    "Summary": "合计",
+    "Summary row settings": "汇总行设置",
+    "Summary row": "汇总行",
+    "Summary": "汇总",
     "Select aggregation type": "请选择聚合方式",
     "Sum": "求和",
-    "Average": "平均值",
+    "Average": "平均",
     "Count": "计数",
     "Min": "最小值",
-    "Max": "最大值"
+    "Max": "最大值",
+    "Selection stats (contains {{num}} cells)": "圈选统计 (包含 {{num}} 个单元格)",
+    "Content": "内容区块",
+    "Search": "搜索"
 }

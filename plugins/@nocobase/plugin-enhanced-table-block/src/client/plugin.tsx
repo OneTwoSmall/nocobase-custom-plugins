@@ -14,12 +14,18 @@ import { observer, useFieldSchema, useField } from '@formily/react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import enUS from '../locale/en-US.json';
+import zhCN from '../locale/zh-CN.json';
+
 const EnhancedTableV1Wrapper = observer((props: any) => {
   return <EnhancedTableWrapper>{props.children}</EnhancedTableWrapper>;
 });
 
 export class PluginEnhancedTableBlockClient extends Plugin {
   async load() {
+    this.app.i18n.addResources('zh-CN', '@nocobase/plugin-enhanced-table-block/client', zhCN);
+    this.app.i18n.addResources('en-US', '@nocobase/plugin-enhanced-table-block/client', enUS);
+
     this.flowEngine.registerModels({
       EnhancedTableBlockModel,
     });
@@ -31,14 +37,12 @@ export class PluginEnhancedTableBlockClient extends Plugin {
 
     // Add V1 schema initializer item for Enhanced Table
     this.app.schemaInitializerManager.addItem('page:addBlock', 'dataBlocks.enhancedTable', {
-      title:
-        '{{t("Enhanced Table", { ns: "@nocobase/plugin-enhanced-table-block/client", defaultValue: "增强表格" })}}',
+      title: '{{t("Enhanced Table", { ns: "@nocobase/plugin-enhanced-table-block/client" })}}',
       Component: 'EnhancedTableBlockInitializer',
     });
 
     this.app.schemaInitializerManager.addItem('RecordBlockInitializers', 'dataBlocks.enhancedTable', {
-      title:
-        '{{t("Enhanced Table", { ns: "@nocobase/plugin-enhanced-table-block/client", defaultValue: "增强表格" })}}',
+      title: '{{t("Enhanced Table", { ns: "@nocobase/plugin-enhanced-table-block/client" })}}',
       Component: 'EnhancedTableBlockInitializer',
     });
 
@@ -53,7 +57,9 @@ export class PluginEnhancedTableBlockClient extends Plugin {
         );
       },
       useComponentProps() {
-        const { t } = useTranslation();
+        const { t } = useTranslation(['@nocobase/plugin-enhanced-table-block/client', 'client'], {
+          nsMode: 'fallback',
+        });
         const fieldSchema = useFieldSchema();
         const { getCollection } = useCollectionManager_deprecated();
         const { dn } = useDesignable();
@@ -73,7 +79,6 @@ export class PluginEnhancedTableBlockClient extends Plugin {
         return {
           title: t('Summary row settings', {
             ns: '@nocobase/plugin-enhanced-table-block/client',
-            defaultValue: '汇总行设置',
           }),
           schema: () => {
             const columnsToSelect: { label: string; value: string; disabled?: boolean }[] = [];
@@ -113,35 +118,30 @@ export class PluginEnhancedTableBlockClient extends Plugin {
                             {
                               label: t('Sum', {
                                 ns: '@nocobase/plugin-enhanced-table-block/client',
-                                defaultValue: '求和',
                               }),
                               value: 'sum',
                             },
                             {
                               label: t('Average', {
                                 ns: '@nocobase/plugin-enhanced-table-block/client',
-                                defaultValue: '平均',
                               }),
                               value: 'avg',
                             },
                             {
                               label: t('Count', {
                                 ns: '@nocobase/plugin-enhanced-table-block/client',
-                                defaultValue: '计数',
                               }),
                               value: 'count',
                             },
                             {
                               label: t('Min', {
                                 ns: '@nocobase/plugin-enhanced-table-block/client',
-                                defaultValue: '最小值',
                               }),
                               value: 'min',
                             },
                             {
                               label: t('Max', {
                                 ns: '@nocobase/plugin-enhanced-table-block/client',
-                                defaultValue: '最大值',
                               }),
                               value: 'max',
                             },
