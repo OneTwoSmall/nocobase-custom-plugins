@@ -13,7 +13,7 @@
 
 ## 安装
 
-这是 NocoBase 的内置核心区块插件。如果未启用，你可以通过 NocoBase 后台的插件管理器进行安装和启用，或者使用 CLI 命令：
+这是基于 NocoBase 官方表格区块二次开发的自定义增强插件。你可以通过 NocoBase 后台的插件管理器进行安装和启用，或者使用 CLI 命令：
 
 ```bash
 yarn nocobase plugin install @nocobase/plugin-enhanced-table-block

@@ -13,7 +13,7 @@
 
 ## Installation
 
-This plugin is a core block in NocoBase. If it is not enabled, you can install and enable it via the NocoBase Admin Plugin Manager or via CLI:
+This is a custom enhanced table plugin based on the official NocoBase table block. You can install and enable it via the NocoBase Admin Plugin Manager or via CLI:
 
 ```bash
 yarn nocobase plugin install @nocobase/plugin-enhanced-table-block
