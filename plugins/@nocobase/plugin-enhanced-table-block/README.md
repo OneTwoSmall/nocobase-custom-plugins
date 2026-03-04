@@ -30,6 +30,9 @@ yarn nocobase plugin install @nocobase/plugin-enhanced-table-block
 ## Changelog
 
 **v2.1.0-beta.7**
+- **Enhancement:** Moved the summary row inside the table structure, supporting native horizontal and vertical scrolling behavior.
+- **Fix:** Resolved an issue where summary values were duplicated across incorrect columns in English mode due to substring matching on column titles.
+- **Fix:** Fixed cell and header alignment issues in the summary row, ensuring proper horizontal scrolling and accurate column width syncing from the table body.
 - **Refactoring:** Replaced the pure regex-based validation with an accurate underlying metadata type-checking logic (DOM to field-type mapping) to exclude dates, times, and non-numerical text from sums.
 - **Fix:** Removed drag-prevention hooks to restore accurate single-cell text selection and copying actions across modern browsers.
 - **Enhancement:** Hover stats for cell selection is now confined to >1 cell selections, reducing UI noise on simple table clicks.

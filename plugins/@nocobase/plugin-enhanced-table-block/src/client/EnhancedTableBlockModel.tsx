@@ -17,8 +17,10 @@ import { useTranslation } from 'react-i18next';
 const wrapperCss = css`
   position: relative;
   height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding-bottom: 7px;
 
   .enhanced-selected-cell {
     background-color: #ffff0033 !important; /* light yellow to match screenshot */
@@ -209,10 +211,11 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
         const firstRow = thead.querySelector('tr');
         if (firstRow) {
           for (let i = 0; i < firstRow.children.length; i++) {
-            const thText = firstRow.children[i].textContent || '';
+            const thText = (firstRow.children[i].textContent || '').trim();
             for (const field of numericFields) {
-              const title = columnTitles[field];
-              if (title && thText.includes(title)) {
+              const title = (columnTitles[field] || '').trim();
+              // Use exact match to prevent false positives
+              if (title && thText === title) {
                 domColumnToNumericKey[i] = true;
                 break;
               }
@@ -328,82 +331,187 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
     // We removed selectionSum from deps so event listeners are not recreated.
   }, []);
 
-  const displayedColumns = orderedColumns.filter((c) => Object.keys(config).includes(c));
-  Object.keys(config).forEach((c) => {
-    if (!displayedColumns.includes(c)) displayedColumns.push(c);
-  });
+  const tLabels: Record<string, string> = {
+    sum: t('Sum', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+    avg: t('Average', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+    count: t('Count', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+    max: t('Max', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+    min: t('Min', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (Object.keys(config).length === 0) {
+      container.querySelectorAll('.enhanced-table-summary').forEach((e) => e.remove());
+      return;
+    }
+
+    const updateDOM = () => {
+      const thead = container.querySelector('.ant-table-thead');
+      if (!thead) return;
+      const firstRow = Array.from(thead.querySelectorAll('tr')).find(
+        (r) => !r.classList.contains('ant-table-measure-row'),
+      ) as HTMLElement;
+      if (!firstRow) return;
+
+      const bodyTable = container.querySelector('.ant-table-body table, .ant-table-content table') as HTMLTableElement;
+      if (!bodyTable) return;
+
+      // Filter out AntD's scrollbar compensation column from header cells
+      const headerCells = Array.from(firstRow.children).filter(
+        (el) => !(el as HTMLElement).classList.contains('ant-table-cell-scrollbar'),
+      ) as HTMLElement[];
+
+      // Get body reference row for accurate position/width syncing
+      const bodyFirstRow = bodyTable.querySelector('tbody tr') as HTMLElement;
+      const bodyCells = bodyFirstRow ? (Array.from(bodyFirstRow.children) as HTMLElement[]) : [];
+
+      let tfoot = bodyTable.querySelector('tfoot.enhanced-table-summary') as HTMLElement;
+      if (!tfoot) {
+        tfoot = document.createElement('tfoot');
+        tfoot.className = 'ant-table-summary enhanced-table-summary';
+        tfoot.style.position = 'sticky';
+        tfoot.style.bottom = '0';
+        tfoot.style.zIndex = '3'; // Ensure it's above table rows
+        tfoot.style.backgroundColor = '#fafafa';
+        bodyTable.appendChild(tfoot);
+      }
+
+      let tr = tfoot.querySelector('tr') as HTMLElement;
+      if (!tr) {
+        tr = document.createElement('tr');
+        tr.className = 'ant-table-row';
+        tfoot.appendChild(tr);
+      }
+
+      // Use body cell count (more accurate) or filtered header cell count
+      const colCount = bodyCells.length || headerCells.length;
+
+      // Ensure exact number of td elements
+      while (tr.children.length < colCount) {
+        const td = document.createElement('td');
+        tr.appendChild(td);
+      }
+      while (tr.children.length > colCount) {
+        if (tr.lastChild) tr.lastChild.remove();
+      }
+
+      // Sync columns and data
+      let summaryTitleRendered = false;
+
+      for (let i = 0; i < colCount; i++) {
+        const th = headerCells[i] as HTMLElement | undefined;
+        const td = tr.children[i] as HTMLElement;
+        const bodyTd = bodyCells[i] as HTMLElement | undefined;
+
+        // Use body cell for styling (more accurate alignment), fall back to header cell
+        const refCell = bodyTd || th;
+
+        // Copy fixed styling from reference cell
+        let classList = 'ant-table-cell ';
+        if (refCell) {
+          refCell.classList.forEach((c) => {
+            if (c.includes('fix-left') || c.includes('fix-right')) classList += c + ' ';
+          });
+        }
+        classList = classList.trim();
+        if (td.className !== classList) td.className = classList;
+
+        // Sync sticky positioning from body cell (more accurate than header)
+        if (bodyTd) {
+          if (td.style.position !== bodyTd.style.position) td.style.position = bodyTd.style.position;
+          if (td.style.left !== bodyTd.style.left) td.style.left = bodyTd.style.left;
+          if (td.style.right !== bodyTd.style.right) td.style.right = bodyTd.style.right;
+        } else if (th) {
+          if (td.style.left !== th.style.left) td.style.left = th.style.left;
+          if (td.style.right !== th.style.right) td.style.right = th.style.right;
+        }
+
+        const bgColor = '#fafafa';
+        if (td.style.backgroundColor !== bgColor) td.style.backgroundColor = bgColor;
+        if (td.style.borderTop !== '2px solid #e8e8e8') td.style.borderTop = '2px solid #e8e8e8';
+        if (td.style.borderBottom !== '1px solid #e8e8e8') td.style.borderBottom = '1px solid #e8e8e8';
+        if (td.style.padding !== '8px 16px') td.style.padding = '8px 16px';
+
+        // Determine if column is checkbox / action column
+        const isSelectionColumn =
+          (th || refCell)?.classList.contains('ant-table-selection-column') ||
+          !!(th || refCell)?.querySelector?.('.ant-checkbox-wrapper');
+        const thText = th?.textContent?.trim() || '';
+        const isActionColumn =
+          (th || refCell)?.classList.contains('nb-action-column') || thText === '操作' || thText === 'Actions';
+
+        let matchedIndex: string | null = null;
+
+        for (const [dataIndex] of Object.entries(config)) {
+          const title = (metadataRef.current.columnTitles[dataIndex] || dataIndex).trim();
+          // Use exact match to prevent false positives (e.g., field "a" matching "Created at")
+          if (title && thText === title && !isActionColumn && !isSelectionColumn) {
+            matchedIndex = dataIndex;
+            break;
+          }
+        }
+
+        let newHTML = '';
+
+        if (matchedIndex) {
+          const type = config[matchedIndex];
+          let result: number | string = '';
+
+          const values = allPagesData
+            .map((row: any) => {
+              let v = typeof row[matchedIndex] === 'function' ? null : row[matchedIndex];
+              if (typeof v === 'string') v = Number(v);
+              return typeof v === 'number' && !isNaN(v) ? v : null;
+            })
+            .filter((v: any) => v !== null) as number[];
+
+          if (values.length > 0) {
+            if (type === 'sum') result = values.reduce((a, b) => a + b, 0);
+            else if (type === 'avg') result = values.reduce((a, b) => a + b, 0) / values.length;
+            else if (type === 'count') result = values.length;
+            else if (type === 'max') result = Math.max(...values);
+            else if (type === 'min') result = Math.min(...values);
+
+            if (typeof result === 'number' && !Number.isInteger(result)) {
+              result = parseFloat(result.toFixed(2));
+            }
+          }
+
+          newHTML = `<div style="display: flex; flex-direction: column; line-height: 1.4;">
+            <span style="color: #8c8c8c; font-size: 11px; font-weight: normal; letter-spacing: 0.5px;">${
+              tLabels[type]?.toUpperCase() || type
+            }</span>
+            <span style="color: #1890ff; font-weight: bold; font-size: 14px;">${result}</span>
+          </div>`;
+          summaryTitleRendered = true;
+        }
+
+        if (td.innerHTML !== newHTML) {
+          td.innerHTML = newHTML;
+        }
+      }
+    };
+
+    updateDOM();
+
+    // Use ResizeObserver and MutationObserver to trigger update dynamically
+    const observer = new MutationObserver(() => updateDOM());
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
+
+    return () => observer.disconnect();
+  }, [config, allPagesData, metadataRef.current.columnTitles, tLabels]);
 
   return (
     <div className={wrapperCss} ref={containerRef}>
-      <div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>{children}</div>
-
-      {true && (
-        <div
-          style={{
-            display: 'flex',
-            background: '#fff',
-            borderTop: '2px solid #000',
-            padding: '8px 16px',
-            alignItems: 'center',
-            gap: '24px',
-            fontWeight: 500,
-            fontSize: '14px',
-          }}
-        >
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <span style={{ color: '#000', fontWeight: 'bold' }}>
-              {t('Summary row', { ns: '@nocobase/plugin-enhanced-table-block/client' })}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', flex: 1, justifyContent: 'flex-end' }}>
-            {displayedColumns.map((dataIndex) => {
-              const type = config[dataIndex];
-              if (!type) return null;
-
-              const title = columnTitles[dataIndex] || dataIndex;
-
-              // Use allPagesData (fetched from API without pagination) instead of current page dataSource
-              const values = allPagesData
-                .map((row: any) => {
-                  let v = typeof row[dataIndex] === 'function' ? null : row[dataIndex];
-                  if (typeof v === 'string') v = Number(v);
-                  return typeof v === 'number' && !isNaN(v) ? v : null;
-                })
-                .filter((v: any) => v !== null) as number[];
-
-              let result: number | string = '';
-              if (values.length > 0) {
-                if (type === 'sum') result = values.reduce((a, b) => a + b, 0);
-                else if (type === 'avg') result = values.reduce((a, b) => a + b, 0) / values.length;
-                else if (type === 'count') result = values.length;
-                else if (type === 'max') result = Math.max(...values);
-                else if (type === 'min') result = Math.min(...values);
-
-                if (typeof result === 'number' && !Number.isInteger(result)) {
-                  result = parseFloat(result.toFixed(2));
-                }
-              }
-
-              const typeLabels: any = {
-                sum: t('Sum', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-                avg: t('Average', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-                count: t('Count', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-                max: t('Max', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-                min: t('Min', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-              };
-
-              return (
-                <div key={dataIndex} style={{ display: 'flex', alignItems: 'baseline', gap: '4px', color: '#000' }}>
-                  <span>
-                    {typeof title === 'string' ? title : dataIndex}({typeLabels[type]})：{result}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {children}
 
       {selectionStats && mousePos && (
         <div

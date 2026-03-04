@@ -8,6 +8,8 @@
     "Sum": "Sum",
     "Average": "Average",
     "Count": "Count",
+    "Min": "Min",
+    "Max": "Max",
     "Selection stats (contains {{num}} cells)": "Selection stats (contains {{num}} cells)",
     "Content": "Content",
     "Search": "Search"
