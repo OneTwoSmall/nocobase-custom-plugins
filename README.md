@@ -43,6 +43,9 @@
    
    # 编译插件
    yarn nocobase build @nocobase/plugin-enhanced-table-block
+
+   # 打包插件 打包后路径 /storage/tar/
+   yarn nocobase build @nocobase/plugin-enhanced-table-block --tar
    
    # 重启服务
    yarn nocobase start
@@ -90,6 +93,9 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
    
    # Build the specific plugin
    yarn nocobase build @nocobase/plugin-enhanced-table-block
+
+   # Tar package into path: /storage/tar/
+   yarn nocobase build @nocobase/plugin-enhanced-table-block --tar
    
    # Restart NocoBase
    yarn nocobase start
