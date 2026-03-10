@@ -11,15 +11,17 @@ import { Plugin } from '@nocobase/server';
 import * as collections from './collections';
 
 export class PluginFilePreviewerOfficeServer extends Plugin {
-  async afterAdd() {}
+  async afterAdd() { }
 
-  async beforeLoad() {}
+  async beforeLoad() { }
 
   async load() {
     // 注册 collections
     Object.values(collections).forEach((collection: any) => {
       this.db.collection(collection);
     });
+
+    this.app.acl.allow('filePreviewer', 'list');
   }
 
   async install() {
@@ -36,11 +38,11 @@ export class PluginFilePreviewerOfficeServer extends Plugin {
     }
   }
 
-  async afterEnable() {}
+  async afterEnable() { }
 
-  async afterDisable() {}
+  async afterDisable() { }
 
-  async remove() {}
+  async remove() { }
 }
 
 export default PluginFilePreviewerOfficeServer;
