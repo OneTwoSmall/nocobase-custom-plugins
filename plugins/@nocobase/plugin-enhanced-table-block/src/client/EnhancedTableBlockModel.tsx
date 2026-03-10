@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 const wrapperCss = css`
   position: relative;
   height: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding-bottom: 7px;
@@ -331,15 +330,15 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
     // We removed selectionSum from deps so event listeners are not recreated.
   }, []);
 
-  const tLabels: Record<string, string> = {
-    sum: t('Sum', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-    avg: t('Average', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-    count: t('Count', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-    max: t('Max', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-    min: t('Min', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
-  };
-
   useEffect(() => {
+    const tLabels: Record<string, string> = {
+      sum: t('Sum', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+      avg: t('Average', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+      count: t('Count', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+      max: t('Max', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+      min: t('Min', { ns: '@nocobase/plugin-enhanced-table-block/client' }),
+    };
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -429,11 +428,13 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
           if (td.style.right !== th.style.right) td.style.right = th.style.right;
         }
 
-        const bgColor = '#fafafa';
-        if (td.style.backgroundColor !== bgColor) td.style.backgroundColor = bgColor;
-        if (td.style.borderTop !== '2px solid #e8e8e8') td.style.borderTop = '2px solid #e8e8e8';
-        if (td.style.borderBottom !== '1px solid #e8e8e8') td.style.borderBottom = '1px solid #e8e8e8';
-        if (td.style.padding !== '8px 16px') td.style.padding = '8px 16px';
+        if (td.dataset.initStyles !== 'true') {
+          td.dataset.initStyles = 'true';
+          td.style.backgroundColor = '#fafafa';
+          td.style.borderTop = '2px solid #e8e8e8';
+          td.style.borderBottom = '1px solid #e8e8e8';
+          td.style.padding = '8px 16px';
+        }
 
         // Determine if column is checkbox / action column
         const isSelectionColumn =
@@ -489,25 +490,52 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
           summaryTitleRendered = true;
         }
 
-        if (td.innerHTML !== newHTML) {
+        // Instead of td.innerHTML !== newHTML, compare using dataset
+        // Browsers parse innerHTML colors (e.g. #8c8c8c -> rgb(...)), returning a different string,
+        // causing this to run repeatedly in a loop!
+        if (td.dataset.contentHash !== newHTML) {
+          td.dataset.contentHash = newHTML;
           td.innerHTML = newHTML;
         }
       }
     };
 
+    let updateRafId: number | null = null;
+    let observerObj: MutationObserver | null = null;
+
+    const scheduleUpdate = () => {
+      if (updateRafId !== null) return;
+      updateRafId = requestAnimationFrame(() => {
+        updateRafId = null;
+        if (observerObj) observerObj.disconnect();
+        updateDOM();
+        if (observerObj) {
+          observerObj.observe(container, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class'],
+          });
+        }
+      });
+    };
+
     updateDOM();
 
-    // Use ResizeObserver and MutationObserver to trigger update dynamically
-    const observer = new MutationObserver(() => updateDOM());
-    observer.observe(container, {
+    // Use MutationObserver to trigger update dynamically
+    observerObj = new MutationObserver(() => scheduleUpdate());
+    observerObj.observe(container, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['style', 'class'],
     });
 
-    return () => observer.disconnect();
-  }, [config, allPagesData, metadataRef.current.columnTitles, tLabels]);
+    return () => {
+      if (updateRafId !== null) cancelAnimationFrame(updateRafId);
+      if (observerObj) observerObj.disconnect();
+    };
+  }, [config, allPagesData, metadataRef.current.columnTitles, t]);
 
   return (
     <div className={wrapperCss} ref={containerRef}>
