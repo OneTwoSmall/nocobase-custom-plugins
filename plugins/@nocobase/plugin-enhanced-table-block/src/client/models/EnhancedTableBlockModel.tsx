@@ -176,18 +176,10 @@ const EnhancedTableWrapper = ({ model, children }: { model: EnhancedTableBlockMo
                   className={css`
                     display: flex;
                     flex-direction: column;
+                    align-items: flex-start;
                     gap: 2px;
                   `}
                 >
-                  <span
-                    className={css`
-                      font-size: 11px;
-                      color: #8c8c8c;
-                      line-height: 1;
-                    `}
-                  >
-                    {model.translate(SUMMARY_TYPE_LABELS[summaryType])}
-                  </span>
                   <span
                     className={css`
                       color: #1d39c4;
@@ -196,6 +188,15 @@ const EnhancedTableWrapper = ({ model, children }: { model: EnhancedTableBlockMo
                     `}
                   >
                     {value}
+                  </span>
+                  <span
+                    className={css`
+                      font-size: 11px;
+                      color: #8c8c8c;
+                      line-height: 1;
+                    `}
+                  >
+                    {model.translate(SUMMARY_TYPE_LABELS[summaryType])}
                   </span>
                 </div>
               ) : idx === 0 ? (

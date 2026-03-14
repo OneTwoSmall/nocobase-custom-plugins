@@ -433,7 +433,7 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
           td.style.backgroundColor = '#fafafa';
           td.style.borderTop = '2px solid #e8e8e8';
           td.style.borderBottom = '1px solid #e8e8e8';
-          td.style.padding = '8px 16px';
+          td.style.padding = '8px 4px';
         }
 
         // Determine if column is checkbox / action column
@@ -481,11 +481,11 @@ export const EnhancedTableWrapper = observer(({ model, children }: { model?: any
             }
           }
 
-          newHTML = `<div style="display: flex; flex-direction: column; line-height: 1.4;">
-            <span style="color: #8c8c8c; font-size: 11px; font-weight: normal; letter-spacing: 0.5px;">${
+          newHTML = `<div style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.4;">
+            <span style="color: #1890ff; font-weight: bold; font-size: 14px; text-align: left;">${result}</span>
+            <span style="color: #8c8c8c; font-size: 11px; font-weight: normal; letter-spacing: 0.5px; text-align: left;">${
               tLabels[type]?.toUpperCase() || type
             }</span>
-            <span style="color: #1890ff; font-weight: bold; font-size: 14px;">${result}</span>
           </div>`;
           summaryTitleRendered = true;
         }
