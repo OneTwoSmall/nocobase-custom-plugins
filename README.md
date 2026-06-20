@@ -1,4 +1,4 @@
-# NocoBase Custom Plugins | NocoBase 自定义插件集
+# NocoBase Custom Plugins | NocoBase 自研插件集
 
 <p align="center">
   <a href="#chinese">简体中文</a> | <a href="#english">English</a>
