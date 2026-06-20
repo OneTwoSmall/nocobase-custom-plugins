@@ -19,7 +19,8 @@
 | **增强版表格区块** | `plugins/@nocobase/plugin-enhanced-table-block` | 增强表格区块，支持合计行和圈选求和功能。 | ✅ 已发布 |
 | **Office 文件预览插件** | `plugins/@nocobase/plugin-file-previewer-office` | 支持多种办公文件预览，提供可配置的预览选项。 | ❌ 已废弃 |
 | **文件预览增强插件** | `plugins/@onetwosmall/plugin-file-previewer-pro` | 增强版文件预览插件，支持更多格式、更高性能和更丰富的配置选项，替代原 Office 文件预览插件。 | ✅ 已发布 |
-| **邮件身份认证插件** | `plugins/@nocobase/plugin-auth-email` | 提供安全可靠的邮件验证码登录与注册功能。 | ✅ 已发布 |
+| **邮件身份认证插件** | `plugins/@nocobase/plugin-auth-email` | 提供安全可靠的邮件验证码登录与注册功能。 | ❌ 已废弃 |
+| **邮件身份认证插件 V2** | `plugins/@onetwosmall/plugin-auth-email` | 基于原插件重构，新增 V2-Client 支持、邮件 HTML 模板及模板实时预览功能，替代原邮件身份认证插件。 | ✅ 已发布 |
 | **更多插件...** | - | 持续开发中，敬请期待。 | 🛠️ 计划中 |
 
 ### 🚀 快速安装
@@ -70,7 +71,8 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 | **Enhanced Table Block** | `plugins/@nocobase/plugin-enhanced-table-block` | Enhanced table block, supporting total rows and selection-sum functions. | ✅ Active |
 | **Office File Previewer** | `plugins/@nocobase/plugin-file-previewer-office` | Supports various office file previews with configurable options. | ❌ Deprecated |
 | **File Previewer Pro** | `plugins/@onetwosmall/plugin-file-previewer-pro` | Enhanced file preview plugin with support for more formats, better performance, and richer configuration options. Replaces the Office File Previewer plugin. | ✅ Active |
-| **Email Auth Plugin** | `plugins/@nocobase/plugin-auth-email` | Provides secure and reliable email verification code login/registration. | ✅ Active |
+| **Email Auth Plugin** | `plugins/@nocobase/plugin-auth-email` | Provides secure and reliable email verification code login/registration. | ❌ Deprecated |
+| **Email Auth Plugin V2** | `plugins/@onetwosmall/plugin-auth-email` | Refactored from the original plugin with added V2-Client support, email HTML templates, and live template preview. Replaces the original Email Auth Plugin. | ✅ Active |
 | **More...** | - | More plugins are on the way. | 🛠️ Roadmap |
 
 ### 🚀 Quick Start
