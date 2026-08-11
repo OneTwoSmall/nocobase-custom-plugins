@@ -12,7 +12,8 @@ const CLASS_NAME = 'se-login-custom';
 const AUTH_SEGMENTS = ['/signin', '/signup', '/forgot-password', '/reset-password'];
 
 export interface LoginPageStyleSettings {
-  loginBackgroundImage?: { url?: string } | null;
+  loginBackgroundImageId?: number;
+  loginBackgroundImage?: { id?: number; url?: string } | null;
   loginFormPosition?: string;
   loginFormOffsetX?: number;
   loginFormOffsetY?: number;
@@ -26,6 +27,18 @@ export interface LoginPageStyleSettings {
 
 let current: LoginPageStyleSettings = {};
 let pollTimer: ReturnType<typeof setInterval> | null = null;
+let apiBaseUrl = '/';
+
+export function setApiBaseUrl(baseUrl: string) {
+  apiBaseUrl = (baseUrl || '/').replace(/\/+$/, '') + '/';
+}
+
+export function getBackgroundUrl(s: LoginPageStyleSettings): string {
+  // 匿名上下文下 settings GET 不返回 loginBackgroundImage 关系对象，只有 loginBackgroundImageId 标量，
+  // 故优先使用标量；设置页保存后 applyStyles 收到的是附件对象，回退取其 id。
+  const id = s.loginBackgroundImageId ?? s.loginBackgroundImage?.id;
+  return id ? `${apiBaseUrl}systemEnhancementSettings:getLoginBackgroundImage?v=${id}` : '';
+}
 
 function isAuthPage(): boolean {
   const p = window.location.pathname;
@@ -33,7 +46,7 @@ function isAuthPage(): boolean {
 }
 
 function buildCSS(s: LoginPageStyleSettings): string {
-  const bgUrl = s.loginBackgroundImage?.url;
+  const bgUrl = getBackgroundUrl(s);
   const bgImage = bgUrl ? `url(${bgUrl})` : 'none';
   const bgSize = s.loginBackgroundSize || 'cover';
   const bgRepeat = s.loginBackgroundRepeat || 'no-repeat';

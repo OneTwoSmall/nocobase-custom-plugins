@@ -7,19 +7,19 @@
  * For more information, please refer to: https://www.nocobase.com/agreement.
  */
 
-import React, { useRef } from 'react';
-import { Card, Form, Switch, Space, message } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Card, Form, Input, message } from 'antd';
 import { useFlowContext } from '@nocobase/flow-engine';
 import { useRequest } from 'ahooks';
 import { useT } from '../locale';
-import { setTableColumnResizeEnabled } from '../plugin';
-import { setEnhancedTableEnabled } from '../enhanced-table/EnhancedTableBlockModel';
+import { applyLogoLink, isSafeRelativeUrl } from '../logoLinkInjector';
 
-export default function TableEnhancementSettings() {
+export default function LogoLinkSettings() {
   const ctx = useFlowContext();
   const t = useT();
   const [form] = Form.useForm();
   const initializedRef = useRef(false);
+  const [invalid, setInvalid] = useState(false);
 
   const { loading } = useRequest(
     async () => {
@@ -29,8 +29,8 @@ export default function TableEnhancementSettings() {
     {
       onSuccess(data) {
         if (data) {
-          form.setFieldsValue(data);
-          setTableColumnResizeEnabled(data.enableTableColumnResize !== false);
+          form.setFieldsValue({ logoLinkUrl: data.logoLinkUrl || '' });
+          applyLogoLink(data.logoLinkUrl || '');
         }
         initializedRef.current = true;
       },
@@ -50,31 +50,38 @@ export default function TableEnhancementSettings() {
   );
 
   return (
-    <Card title={t('Table Enhancement')} loading={loading}>
+    <Card title={t('Logo Link')} loading={loading}>
       <Form
         form={form}
         layout="vertical"
-        initialValues={{ enableTableColumnResize: true }}
+        initialValues={{ logoLinkUrl: '' }}
         onValuesChange={(_, values) => {
-          if (initializedRef.current) {
-            setTableColumnResizeEnabled(values.enableTableColumnResize);
-            setEnhancedTableEnabled(values.enableEnhancedTable !== false);
-            save(values);
+          if (!initializedRef.current) {
+            return;
           }
+          const url = (values.logoLinkUrl as string) || '';
+          if (!isSafeRelativeUrl(url)) {
+            setInvalid(true);
+            return;
+          }
+          setInvalid(false);
+          applyLogoLink(url);
+          save(values);
         }}
       >
-        <Space>
-          <span>{t('Enable table column drag resize')}</span>
-          <Form.Item name="enableTableColumnResize" valuePropName="checked" noStyle>
-            <Switch disabled={saving} />
-          </Form.Item>
-        </Space>
-        <Space>
-          <span>{t('Enable enhanced table')}</span>
-          <Form.Item name="enableEnhancedTable" valuePropName="checked" noStyle>
-            <Switch disabled={saving} />
-          </Form.Item>
-        </Space>
+        <Form.Item
+          name="logoLinkUrl"
+          label={t('Logo Link URL')}
+          validateStatus={invalid ? 'error' : undefined}
+          help={invalid ? t('Only relative paths within the current system are allowed') : t('Logo Link URL help')}
+        >
+          <Input
+            disabled={saving}
+            placeholder="/your/path"
+            status={invalid ? 'error' : undefined}
+            onBlur={() => setInvalid(false)}
+          />
+        </Form.Item>
       </Form>
     </Card>
   );

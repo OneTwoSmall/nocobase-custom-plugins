@@ -43,5 +43,21 @@
   "Top Right": "Top Right",
   "Bottom Left": "Bottom Left",
   "Bottom Right": "Bottom Right",
-  "Default": "Default"
+  "Default": "Default",
+  "Logo Link": "Logo Link",
+  "Logo Link URL": "Logo Link URL",
+  "Only relative paths within the current system are allowed": "Only relative paths within the current system are allowed",
+  "Only relative paths within the current system are allowed for the logo link": "Only relative paths within the current system are allowed for the logo link",
+  "Logo Link URL help": "When set, clicking the logo at the top-left corner will navigate to this relative path (e.g. /admin); leave empty to keep default behavior. Only relative paths within the current system are allowed.",
+  "Enhanced Table": "Enhanced Table",
+  "Enhanced table settings": "Enhanced table settings",
+  "Summary row settings": "Summary row settings",
+  "Select aggregation type": "Select aggregation type",
+  "Sum": "Sum",
+  "Average": "Average",
+  "Count": "Count",
+  "Min": "Min",
+  "Max": "Max",
+  "Selection stats (contains {{num}} cells)": "Selection stats (contains {{num}} cells)",
+  "Enable enhanced table": "Enable enhanced table"
 }

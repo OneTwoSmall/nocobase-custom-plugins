@@ -22,7 +22,7 @@
 | **邮件身份认证插件** | `plugins/@nocobase/plugin-auth-email` | 提供安全可靠的邮件验证码登录与注册功能。 | ❌ 已废弃 |
 | **邮件身份认证插件 V2** | `plugins/@onetwosmall/plugin-auth-email` | 基于原插件重构，新增 V2-Client 支持、邮件 HTML 模板及模板实时预览功能，替代原邮件身份认证插件。 | ✅ 已发布 |
 | **致远OA单点登录插件** | `plugins/@onetwosmall/plugin-seeyon-auth` | 通过致远OA第三方认证接口实现单点登录（SSO），支持票据校验、自动注册与 v1/v2 客户端。 | ✅ 已发布 |
-| **系统增强插件** | `plugins/@onetwosmall/plugin-system-enhancement` | 系统增强功能：表格列宽拖拽调整、登录页自定义（背景图、表单位置、标题样式）。 | ✅ 已发布 |
+| **系统增强插件** | `plugins/@onetwosmall/plugin-system-enhancement` | 系统增强功能：原生表格汇总行与圈选统计、列宽拖拽调整、登录页自定义（背景图、表单位置、标题样式）与 Logo 链接导航。 | ✅ 已发布 |
 | **更多插件...** | - | 持续开发中，敬请期待。 | 🛠️ 计划中 |
 
 ### 🚀 快速安装
@@ -76,7 +76,7 @@ Welcome to **OneTwoSmall's** NocoBase plugin repository. This collection feature
 | **Email Auth Plugin** | `plugins/@nocobase/plugin-auth-email` | Provides secure and reliable email verification code login/registration. | ❌ Deprecated |
 | **Email Auth Plugin V2** | `plugins/@onetwosmall/plugin-auth-email` | Refactored from the original plugin with added V2-Client support, email HTML templates, and live template preview. Replaces the original Email Auth Plugin. | ✅ Active |
 | **Seeyon OA Auth Plugin** | `plugins/@onetwosmall/plugin-seeyon-auth` | Single sign-on authentication against Seeyon OA via ticket validation, with auto-registration and v1/v2 client support. | ✅ Active |
-| **System Enhancement Plugin** | `plugins/@onetwosmall/plugin-system-enhancement` | System enhancements: resizable table columns and customizable login page (background image, form position, title styles). | ✅ Active |
+| **System Enhancement Plugin** | `plugins/@onetwosmall/plugin-system-enhancement` | System enhancements: native table summary rows with cell selection stats, resizable table columns, customizable login page (background image, form position, title styles), and logo link navigation. | ✅ Active |
 | **More...** | - | More plugins are on the way. | 🛠️ Roadmap |
 
 ### 🚀 Quick Start

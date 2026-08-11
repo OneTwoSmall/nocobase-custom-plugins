@@ -12,7 +12,9 @@ import { Plugin } from '@nocobase/client-v2';
 import React from 'react';
 import { NAMESPACE } from './constants';
 import { ResizableHeader } from './ResizableHeader';
-import { applyStyles, type LoginPageStyleSettings } from './loginPageStyleInjector';
+import { applyStyles, setApiBaseUrl, type LoginPageStyleSettings } from './loginPageStyleInjector';
+import { applyLogoLink } from './logoLinkInjector';
+import { EnhancedTableBlockModel, setEnhancedTableEnabled } from './enhanced-table/EnhancedTableBlockModel';
 
 let enableTableColumnResize = true;
 
@@ -23,6 +25,10 @@ export function setTableColumnResizeEnabled(enabled: boolean) {
 export class PluginSystemEnhancementClientV2 extends Plugin<any> {
   async load() {
     const self = this as any;
+
+    // 覆盖注册原生 TableBlockModel：所有原生表格区块（含存量页面）都使用增强子类，
+    // 通过 renderComponent 包裹渲染汇总行，并提供 enhancedTableSettings 设置流程。
+    this.flowEngine.registerModels({ TableBlockModel: EnhancedTableBlockModel });
 
     self.pluginSettingsManager.addMenuItem({
       key: NAMESPACE,
@@ -43,17 +49,26 @@ export class PluginSystemEnhancementClientV2 extends Plugin<any> {
       aclSnippet: `pm.${NAMESPACE}.settings`,
       componentLoader: () => import('./pages/LoginPageSettings'),
     });
+    self.pluginSettingsManager.addPageTabItem({
+      menuKey: NAMESPACE,
+      key: 'logo-link',
+      title: this.t('Logo Link'),
+      aclSnippet: `pm.${NAMESPACE}.settings`,
+      componentLoader: () => import('./pages/LogoLinkSettings'),
+    });
 
     try {
+      setApiBaseUrl(self.context.api.axios.defaults.baseURL);
       const res = await self.context.api.request({
         url: 'systemEnhancementSettings:get/1',
         method: 'get',
-        params: { appends: ['loginBackgroundImage'] },
       });
       const data = res?.data?.data;
       enableTableColumnResize = data?.enableTableColumnResize !== false;
+      setEnhancedTableEnabled(data?.enableEnhancedTable !== false);
       if (data) {
         applyStyles(data as LoginPageStyleSettings);
+        applyLogoLink(data?.logoLinkUrl || '', () => self.context.router?.navigate);
       }
     } catch {
       /* default */

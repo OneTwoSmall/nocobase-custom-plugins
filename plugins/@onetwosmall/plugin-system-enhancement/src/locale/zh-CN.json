@@ -43,5 +43,21 @@
   "Top Right": "右上",
   "Bottom Left": "左下",
   "Bottom Right": "右下",
-  "Default": "默认"
+  "Default": "默认",
+  "Logo Link": "Logo 链接",
+  "Logo Link URL": "Logo 绑定网址",
+  "Only relative paths within the current system are allowed": "仅允许当前系统内的相对路径",
+  "Only relative paths within the current system are allowed for the logo link": "Logo 绑定的网址仅允许当前系统内的相对路径",
+  "Logo Link URL help": "填写后，点击系统左上角的 Logo 将跳转到该相对路径（如 /admin）；留空则不跳转。仅允许当前系统内的相对路径。",
+  "Enhanced Table": "增强表格",
+  "Enhanced table settings": "增强表格设置",
+  "Summary row settings": "汇总行设置",
+  "Select aggregation type": "请选择聚合方式",
+  "Sum": "求和",
+  "Average": "平均",
+  "Count": "计数",
+  "Min": "最小值",
+  "Max": "最大值",
+  "Selection stats (contains {{num}} cells)": "圈选统计 (包含 {{num}} 个单元格)",
+  "Enable enhanced table": "启用增强表格"
 }

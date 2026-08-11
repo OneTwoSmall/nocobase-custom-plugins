@@ -7,4 +7,8 @@
  * For more information, please refer to: https://www.nocobase.com/agreement.
  */
 
-export { default } from './plugin';
+import { Plugin } from '@nocobase/client';
+
+export class PluginSystemEnhancementClient extends Plugin {}
+
+export default PluginSystemEnhancementClient;
