@@ -1,0 +1,14 @@
+{
+  "Seeyon OA": "Seeyon OA",
+  "OA Host": "OA Host",
+  "Please enter the OA server address": "Please enter the OA server address",
+  "Sign up automatically when the user does not exist": "Sign up automatically when the user does not exist",
+  "User Match Field": "User Match Field",
+  "Username": "Username",
+  "Email": "Email",
+  "Nickname": "Nickname",
+  "Default Password": "Default Password",
+  "Ticket is required": "Ticket is required",
+  "Invalid ticket or authentication failed": "Invalid ticket or authentication failed",
+  "User not found and auto-registration is disabled": "User not found and auto-registration is disabled"
+}

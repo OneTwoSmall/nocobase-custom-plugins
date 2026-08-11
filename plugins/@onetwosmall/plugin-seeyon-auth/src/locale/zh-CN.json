@@ -1,0 +1,14 @@
+{
+  "Seeyon OA": "致远OA",
+  "OA Host": "OA服务地址",
+  "Please enter the OA server address": "请输入OA服务器地址",
+  "Sign up automatically when the user does not exist": "用户不存在时自动注册",
+  "User Match Field": "用户匹配字段",
+  "Username": "用户名",
+  "Email": "邮箱",
+  "Nickname": "昵称",
+  "Default Password": "新用户默认密码",
+  "Ticket is required": "缺少认证票据",
+  "Invalid ticket or authentication failed": "票据无效或认证失败",
+  "User not found and auto-registration is disabled": "用户不存在且未开启自动注册"
+}

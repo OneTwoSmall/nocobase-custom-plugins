@@ -1,0 +1,23 @@
+{
+  "name": "@onetwosmall/plugin-seeyon-auth",
+  "version": "2.2.0-beta.15",
+  "main": "dist/server/index.js",
+  "displayName": "Auth: Seeyon OA",
+  "displayName.zh-CN": "认证：致远OA",
+  "description": "Seeyon OA single sign-on authentication.",
+  "description.zh-CN": "致远OA单点登录认证插件。",
+  "dependencies": {
+    "@nocobase/auth": "2.x"
+  },
+  "peerDependencies": {
+    "@nocobase/client": "2.x",
+    "@nocobase/client-v2": "2.x",
+    "@nocobase/database": "2.x",
+    "@nocobase/plugin-auth": "2.x",
+    "@nocobase/server": "2.x",
+    "@nocobase/test": "2.x"
+  },
+  "keywords": [
+    "Authentication"
+  ]
+}
