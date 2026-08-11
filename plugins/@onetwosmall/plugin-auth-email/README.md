@@ -44,4 +44,5 @@ Enable the plugin via the Plugin Manager in the NocoBase admin panel.
 
 ## License
 
-AGPL-3.0
+This project is dual-licensed under AGPL-3.0 and a commercial license.
+For commercial licensing (e.g., closed-source deployment), please contact: moonship1011@gmail.com.

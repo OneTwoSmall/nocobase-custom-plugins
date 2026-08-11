@@ -6,6 +6,7 @@
   "displayName.zh-CN": "系统增强",
   "description": "System enhancement features including table enhancement and more.",
   "description.zh-CN": "系统增强功能，包括表格增强等。",
+  "license": "AGPL-3.0",
   "nocobase": {
     "supportedVersions": ["1.x", "2.x"],
     "editionLevel": 0

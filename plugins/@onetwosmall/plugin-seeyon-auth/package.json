@@ -6,6 +6,7 @@
   "displayName.zh-CN": "认证：致远OA",
   "description": "Seeyon OA single sign-on authentication.",
   "description.zh-CN": "致远OA单点登录认证插件。",
+  "license": "AGPL-3.0",
   "dependencies": {
     "@nocobase/auth": "2.x"
   },

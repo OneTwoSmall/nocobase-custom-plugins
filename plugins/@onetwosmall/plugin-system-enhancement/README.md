@@ -46,5 +46,5 @@ After enabling the plugin, open **Settings > System Enhancement** to configure:
 
 ## License
 
-This project is dual-licensed under AGPL-3.0 and NocoBase Commercial License.
-For more information, please refer to: https://www.nocobase.com/agreement.
+This project is dual-licensed under AGPL-3.0 and a commercial license.
+For commercial licensing (e.g., closed-source deployment), please contact: moonship1011@gmail.com.

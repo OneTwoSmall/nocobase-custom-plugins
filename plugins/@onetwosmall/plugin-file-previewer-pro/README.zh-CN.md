@@ -201,6 +201,5 @@ http://your-kkfileview-server:8012/onlinePreview?url=<encoded-url>
 
 ## 许可证
 
-本项目采用双许可证模式：AGPL-3.0 和 NocoBase 商业许可证。
-
-更多信息请访问：https://www.nocobase.com/agreement
+本项目采用双许可：AGPL-3.0 与商业授权。
+商业授权（如闭源部署）请联系：moonship1011@gmail.com。
