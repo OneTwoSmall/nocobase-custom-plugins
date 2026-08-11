@@ -10,8 +10,10 @@
 import { useApp } from '@nocobase/client';
 import { useCallback } from 'react';
 import { NAMESPACE } from './constants';
+// @ts-ignore
+import pkg from './../../package.json';
 
 export function useT() {
   const app = useApp() as any;
-  return useCallback((str: string) => app.i18n.t(str, { ns: [NAMESPACE, 'client'] }), [app]);
+  return useCallback((str: string) => app.i18n.t(str, { ns: [pkg.name, NAMESPACE, 'client'] }), [app]);
 }

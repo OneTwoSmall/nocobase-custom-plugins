@@ -11,5 +11,21 @@ import { defineCollection } from '@nocobase/database';
 
 export default defineCollection({
   name: 'systemEnhancementSettings',
-  fields: [{ name: 'enableTableColumnResize', type: 'boolean', defaultValue: true }],
+  fields: [
+    { name: 'enableTableColumnResize', type: 'boolean', defaultValue: true },
+    {
+      name: 'loginBackgroundImage',
+      type: 'belongsTo',
+      target: 'attachments',
+    },
+    { name: 'loginFormPosition', type: 'string', defaultValue: 'center' },
+    { name: 'loginFormOffsetX', type: 'integer', defaultValue: 0 },
+    { name: 'loginFormOffsetY', type: 'integer', defaultValue: 0 },
+    { name: 'loginTitleFontSize', type: 'string' },
+    { name: 'loginTitleFontWeight', type: 'string' },
+    { name: 'loginTitleColor', type: 'string' },
+    { name: 'loginBackgroundSize', type: 'string', defaultValue: 'cover' },
+    { name: 'loginBackgroundRepeat', type: 'string', defaultValue: 'no-repeat' },
+    { name: 'loginBackgroundPosition', type: 'string', defaultValue: 'center' },
+  ],
 });

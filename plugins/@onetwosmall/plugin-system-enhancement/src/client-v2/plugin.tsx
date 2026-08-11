@@ -12,6 +12,7 @@ import { Plugin } from '@nocobase/client-v2';
 import React from 'react';
 import { NAMESPACE } from './constants';
 import { ResizableHeader } from './ResizableHeader';
+import { applyStyles, type LoginPageStyleSettings } from './loginPageStyleInjector';
 
 let enableTableColumnResize = true;
 
@@ -35,10 +36,25 @@ export class PluginSystemEnhancementClientV2 extends Plugin<any> {
       aclSnippet: `pm.${NAMESPACE}.settings`,
       componentLoader: () => import('./pages/TableEnhancementSettings'),
     });
+    self.pluginSettingsManager.addPageTabItem({
+      menuKey: NAMESPACE,
+      key: 'login-page',
+      title: this.t('Login Page Customization'),
+      aclSnippet: `pm.${NAMESPACE}.settings`,
+      componentLoader: () => import('./pages/LoginPageSettings'),
+    });
 
     try {
-      const res = await self.context.api.request({ url: 'systemEnhancementSettings:get/1', method: 'get' });
-      enableTableColumnResize = res?.data?.data?.enableTableColumnResize !== false;
+      const res = await self.context.api.request({
+        url: 'systemEnhancementSettings:get/1',
+        method: 'get',
+        params: { appends: ['loginBackgroundImage'] },
+      });
+      const data = res?.data?.data;
+      enableTableColumnResize = data?.enableTableColumnResize !== false;
+      if (data) {
+        applyStyles(data as LoginPageStyleSettings);
+      }
     } catch {
       /* default */
     }

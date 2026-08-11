@@ -18,7 +18,8 @@ export class PluginSystemEnhancementServer extends Plugin {
       actions: ['systemEnhancementSettings:*'],
     });
 
-    this.app.acl.allow('systemEnhancementSettings', ['get', 'update'], 'loggedIn');
+    this.app.acl.allow('systemEnhancementSettings', 'get', 'public');
+    this.app.acl.allow('systemEnhancementSettings', 'update', 'loggedIn');
   }
 
   async load() {}
@@ -30,7 +31,18 @@ export class PluginSystemEnhancementServer extends Plugin {
       const repo = this.db.getRepository('systemEnhancementSettings');
       const count = await repo.count();
       if (count === 0) {
-        await repo.create({ values: { id: 1, enableTableColumnResize: true } });
+        await repo.create({
+          values: {
+            id: 1,
+            enableTableColumnResize: true,
+            loginFormPosition: 'center',
+            loginFormOffsetX: 0,
+            loginFormOffsetY: 0,
+            loginBackgroundSize: 'cover',
+            loginBackgroundRepeat: 'no-repeat',
+            loginBackgroundPosition: 'center',
+          },
+        });
       }
     } catch {
       // Non-critical
